@@ -1,0 +1,21 @@
+<!doctype html><html><head><meta charset="utf-8"><title>probe</title></head><body>
+<pre id="out">start</pre>
+<script>
+const out=document.getElementById('out');
+function log(s){out.textContent+="\n"+s;}
+const T=()=>Math.round(performance.now());
+(async()=>{
+  try{
+    const r=await fetch('https://api.sheepy.com/spa/currencies',{method:'GET',headers:{'Accept':'application/json','X-Requested-With':'XMLHttpRequest'},credentials:'include',mode:'cors'});
+    const b=await r.text();
+    log('GET currencies status='+r.status+' len='+b.length+' t='+T()+' body='+b.slice(0,160));
+  }catch(e){log('GET currencies ERR '+e+' t='+T());}
+  try{
+    const r2=await fetch('https://api.sheepy.com/auth/password/forgot',{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json','X-Requested-With':'XMLHttpRequest'},body:JSON.stringify({email:'probe@example.com'}),credentials:'include',mode:'cors'});
+    const b2=await r2.text();
+    log('POST forgot status='+r2.status+' len='+b2.length+' t='+T()+' body='+b2.slice(0,300));
+  }catch(e){log('POST forgot ERR '+e+' t='+T());}
+  const d=document.createElement('div');d.id='done';d.textContent='done';document.body.appendChild(d);
+})();
+</script>
+</body></html>
