@@ -1,21 +1,15 @@
-<!doctype html><html><head><meta charset="utf-8"><title>probe</title></head><body>
+<!doctype html><html><head><meta charset="utf-8"><title>probe2</title></head><body>
 <pre id="out">start</pre>
 <script>
-const out=document.getElementById('out');
-function log(s){out.textContent+="\n"+s;}
-const T=()=>Math.round(performance.now());
+const out=document.getElementById('out');function log(s){out.textContent+="\n"+s;}
+function done(){const d=document.createElement('div');d.id='done';d.textContent='done';document.body.appendChild(d);}
 (async()=>{
-  try{
-    const r=await fetch('https://api.sheepy.com/spa/currencies',{method:'GET',headers:{'Accept':'application/json','X-Requested-With':'XMLHttpRequest'},credentials:'include',mode:'cors'});
-    const b=await r.text();
-    log('GET currencies status='+r.status+' len='+b.length+' t='+T()+' body='+b.slice(0,160));
-  }catch(e){log('GET currencies ERR '+e+' t='+T());}
-  try{
-    const r2=await fetch('https://api.sheepy.com/auth/password/forgot',{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json','X-Requested-With':'XMLHttpRequest'},body:JSON.stringify({email:'probe@example.com'}),credentials:'include',mode:'cors'});
-    const b2=await r2.text();
-    log('POST forgot status='+r2.status+' len='+b2.length+' t='+T()+' body='+b2.slice(0,300));
-  }catch(e){log('POST forgot ERR '+e+' t='+T());}
-  const d=document.createElement('div');d.id='done';d.textContent='done';document.body.appendChild(d);
+ try{const r=await fetch('https://api.sheepy.com/spa/currencies',{method:'GET',headers:{'Accept':'application/json'},credentials:'omit',mode:'cors'});const b=await r.text();log('G1 status='+r.status+' len='+b.length+' body='+b.slice(0,150));}catch(e){log('G1 ERR '+e.name+' '+e.message);}
+ try{const r=await fetch('https://api.sheepy.com/api/v1/rate',{method:'GET',headers:{'Accept':'application/json'},credentials:'omit',mode:'cors'});const b=await r.text();log('G2 status='+r.status+' len='+b.length+' body='+b.slice(0,150));}catch(e){log('G2 ERR '+e.name+' '+e.message);}
+ let t=Date.now();
+ try{const r=await fetch('https://api.sheepy.com/auth/password/forgot',{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/x-www-form-urlencoded'},body:'email=probe%40example.com',mode:'no-cors'});log('P1 type='+r.type+' t='+(Date.now()-t));}catch(e){log('P1 ERR '+e.name+' t='+(Date.now()-t));}
+ t=Date.now();
+ try{const r=await fetch('https://api.sheepy.com/auth/password/forgot',{method:'POST',headers:{'Accept':'application/json'},body:'email=probe2%40example.com',mode:'no-cors'});log('P2 type='+r.type+' t='+(Date.now()-t));}catch(e){log('P2 ERR '+e.name+' t='+(Date.now()-t));}
+ done();
 })();
-</script>
-</body></html>
+</script></body></html>
